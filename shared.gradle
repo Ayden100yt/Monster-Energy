@@ -1,0 +1,55 @@
+// Applied by both subprojects. Expects `implPackage` and `javaRelease` in ext.
+
+// Copy the shared source code, putting the version-specific implementation into its own package
+// (com.ayden.monsterenergy.impl -> com.ayden.monsterenergy.impl.<implPackage>) so both compiled
+// copies can live in the same jar.
+def generatedSrc = layout.buildDirectory.dir('generated/monster-energy-src')
+def implPackage = project.ext.implPackage
+def prepareSources = tasks.register('prepareSources', Sync) {
+	from(rootProject.file('src/main/java'))
+	into(generatedSrc)
+	inputs.property 'implPackage', implPackage
+	eachFile { details ->
+		if (details.path.startsWith('com/ayden/monsterenergy/impl/')) {
+			details.path = details.path.replace('com/ayden/monsterenergy/impl/', "com/ayden/monsterenergy/impl/${implPackage}/")
+		}
+	}
+	filter { String line ->
+		line.replace('package com.ayden.monsterenergy.impl;', "package com.ayden.monsterenergy.impl.${implPackage};")
+	}
+}
+
+sourceSets {
+	main {
+		java.setSrcDirs([])
+		java.srcDir(prepareSources)
+		resources.setSrcDirs([rootProject.file('src/main/resources')])
+	}
+}
+
+loom {
+	mods {
+		"monster_energy" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+processResources {
+	def version = rootProject.mod_version
+	inputs.property 'version', version
+	filesMatching('fabric.mod.json') {
+		expand 'version': version
+	}
+}
+
+def release = project.ext.javaRelease as int
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = release
+	it.options.encoding = 'UTF-8'
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(release)
+	targetCompatibility = JavaVersion.toVersion(release)
+}

@@ -1,0 +1,26 @@
+modLoader="javafml"
+# Forge 62 = MC 26.1, 63 = 26.1.1, 64 = 26.1.2, 65 = 26.2
+loaderVersion="[62,)"
+license="MIT"
+
+[[mods]]
+modId="monster_energy"
+version="${version}"
+displayName="Monster Energy"
+authors="Ayden"
+logoFile="assets/monster_energy/icon.png"
+description='''Adds Monster Energy'''
+
+[[dependencies.monster_energy]]
+    modId="forge"
+    mandatory=true
+    versionRange="[62,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.monster_energy]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[26.1,26.3)"
+    ordering="NONE"
+    side="BOTH"

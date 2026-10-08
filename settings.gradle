@@ -1,0 +1,12 @@
+// Monster Energy - Fabric + Forge for Minecraft 26.1 - 26.2
+//
+//   common/  shared code (the item itself) + assets, recipe, lang
+//   fabric/  Fabric loader part   -> fabric/build/libs/monster-energy-fabric-<version>.jar
+//   forge/   Forge loader part    -> forge/build/libs/monster-energy-forge-<version>.jar
+//
+// fabric/ and forge/ are separate (included) builds, so Fabric Loom and ForgeGradle
+// never get in each other's way.
+rootProject.name = 'monster-energy'
+
+includeBuild 'fabric'
+includeBuild 'forge'

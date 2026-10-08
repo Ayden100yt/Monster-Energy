@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "monster_energy",
+  "version": "${version}",
+  "name": "Monster Energy",
+  "description": "Adds Monster Energy",
+  "authors": [
+    "Ayden"
+  ],
+  "license": "MIT",
+  "icon": "assets/monster_energy/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.ayden.monsterenergy.fabric.MonsterEnergyFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": ">=26.1 <26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

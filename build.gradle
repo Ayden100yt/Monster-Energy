@@ -1,0 +1,44 @@
+// Root tasks. Run from this folder:
+//   .\gradlew.bat build             -> builds both jars and copies them to build\libs
+//   .\gradlew.bat runFabricClient   -> starts Minecraft with Fabric + the mod
+//   .\gradlew.bat runForgeClient    -> starts Minecraft with Forge + the mod
+
+def fabric = gradle.includedBuild('fabric')
+def forge = gradle.includedBuild('forge')
+
+def collectJars = tasks.register('collectJars', Copy) {
+	group = 'build'
+	description = 'Copies the finished Fabric and Forge jars to build/libs.'
+	dependsOn fabric.task(':build'), forge.task(':build')
+	from(file('fabric/build/libs')) {
+		include 'monster-energy-fabric-*.jar'
+		exclude '*-sources.jar'
+	}
+	from(file('forge/build/libs')) {
+		include 'monster-energy-forge-*.jar'
+		exclude '*-sources.jar'
+	}
+	into(layout.buildDirectory.dir('libs'))
+}
+
+tasks.register('build') {
+	group = 'build'
+	description = 'Builds the Fabric and the Forge jar.'
+	dependsOn collectJars
+}
+
+tasks.register('clean') {
+	group = 'build'
+	dependsOn fabric.task(':clean'), forge.task(':clean')
+	doLast { delete(layout.buildDirectory) }
+}
+
+tasks.register('runFabricClient') {
+	group = 'run'
+	dependsOn fabric.task(':runClient')
+}
+
+tasks.register('runForgeClient') {
+	group = 'run'
+	dependsOn forge.task(':runClient')
+}

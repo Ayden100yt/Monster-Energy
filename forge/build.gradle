@@ -1,0 +1,56 @@
+plugins {
+	id 'java'
+	id 'idea'
+	id 'eclipse'
+	id 'net.minecraftforge.gradle' version '[7.0.17,8)'
+}
+
+version = project.mod_version
+group = 'com.ayden.monsterenergy'
+base { archivesName = 'monster-energy-forge' }
+
+// Minecraft 26.1+ runs on Java 25
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+// Shared code + assets live in ../common
+sourceSets {
+	main {
+		java.srcDir '../common/src/main/java'
+		resources.srcDir '../common/src/main/resources'
+	}
+}
+
+minecraft {
+	runs {
+		configureEach {
+			workingDir = layout.projectDirectory.dir('run')
+		}
+		register('client')
+		register('server') {
+			args '--nogui'
+		}
+	}
+}
+
+repositories {
+	minecraft.mavenizer(it)
+	maven fg.forgeMaven
+	maven fg.minecraftLibsMaven
+	mavenCentral()
+}
+
+dependencies {
+	implementation minecraft.dependency("net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}")
+}
+
+processResources {
+	def version = project.version
+	inputs.property 'version', version
+	filesMatching('META-INF/mods.toml') {
+		expand 'version': version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
